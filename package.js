@@ -1,7 +1,7 @@
 Package.describe({
     name: 'pwix:accounts-hub',
     version: '1.0.0-rc',
-    summary: 'Accounts management base',
+    summary: '          ',
     git: 'https://github.com/trychlos/pwix-accounts-hub',
     documentation: 'README.md'
 });
@@ -29,6 +29,7 @@ function configure( api ){
     api.use( 'ecmascript' );
     api.use( 'mongo' );
     api.use( 'pwix:i18n@1.5.0' );
+    api.use( 'pwix:options@1.0.0' );
     api.use( 'reactive-var' );
     api.use( 'tmeasday:check-npm-versions@1.0.2 || 2.0.0-beta.0', 'server' );
 }
