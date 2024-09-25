@@ -17,16 +17,13 @@ AccountsHub.areSame = function( userA, userB ){
     _trace( 'AccountsHub.areSame()', arguments );
     const idA = userA ? ( _.isObject( userA ) ? userA._id : ( _.isString( userA ) ? userA : null )) : null;
     const idB = userB ? ( _.isObject( userB ) ? userB._id : ( _.isString( userB ) ? userB : null )) : null;
-    let res = true;
     if( idA === null ){
         console.warn( 'unable to get user identifier from', userA );
     }
     if( idB === null ){
         console.warn( 'unable to get user identifier from', userB );
     }
-    if( idA && idB ){
-        res = ( idA === idB );
-    }
+    const res = ( idA === idB );
     return res;
 }
 
@@ -61,17 +58,6 @@ AccountsHub.cleanupUserDocument = function( user ){
         delete user.profile;
     }
     return user;
-}
-
-/**
- * @locus Anywhere
- * @param {String} email an email address
- * @returns {Object} the default Mongo selector for this email address
- */
-AccountsHub.emailSelector = function( email ){
-    _trace( 'AccountsHub.emailSelector()', arguments );
-    let selector = { 'emails.address': email };
-    return selector;
 }
 
 /**
@@ -141,14 +127,3 @@ AccountsHub.update = async function( user, modifier, options ){
     return res;
 };
 */
-
-/**
- * @locus Anywhere
- * @param {String} username
- * @returns {Object} the default Mongo selector for this username
- */
-AccountsHub.usernameSelector = function( username ){
-    _trace( 'AccountsHub.usernameSelector()', arguments );
-    let selector = { $or: [{ username: username }, { 'usernames.username': username }]};
-    return selector;
-}

@@ -22,23 +22,31 @@ AccountsHub.s = {
      *  Each email address can only belong to one user
      *  In other words, an email address can be considered as a user identiier in Meteor ecosystems
      */
-    async byEmailAddress( collection, email, options={} ){
+    async byEmailAddress( instanceName, email, options={} ){
         _trace( 'AccountsHub.s.byEmailAddress()', arguments );
-        assert( collection && collection instanceof Mongo.Collection, 'expects email be a Mongo.Collection, got '+collection );
+        assert( instanceName && _.isString( instanceName ), 'expects instanceName be a string, got '+instanceName );
         assert( email && _.isString( email ), 'expects email be a string, got '+email );
         assert( options && _.isObject( options ), 'expects options be an object, got ',+options );
-        let docs = null;
         let result = null;
-        if( collection.name === ahOptions._defaults.name ){
-            docs = await Accounts.findUserByEmail( email, options );
-            if( docs ){
-                docs = [ docs ];
+        const ahInstance = AccountsHub.instances[instanceName];
+        if( ahInstance ){
+            assert( ahInstance instanceof AccountsHub.ahClass, 'expects an instance of AccountsHub.ahClass, got '+ahInstance );
+            let docs = null;
+            if( ahInstance.opts().collection() === ahOptions._defaults.name ){
+                docs = await Accounts.findUserByEmail( email, options );
+                if( docs ){
+                    docs = [ docs ];
+                }
+            } else {
+                const collection = ahInstance.collection();
+                assert( collection && collection instanceof Mongo.Collection, 'expects a Mongo.Collection, got '+collection );
+                docs = await collection.find( ahInstance.emailSelector( email ), options ).fetchAsync();
+            }
+            if( docs && docs.length === 1 && docs[0] ){
+                result = AccountsHub.cleanupUserDocument( docs[0] );
             }
         } else {
-            docs = await collection.find( AccountsHub.emailSelector( email ), options ).fetchAsync();
-        }
-        if( docs && docs.length === 1 && docs[0] ){
-            result = AccountsHub.cleanupUserDocument( docs[0] );
+            console.error( 'ahInstance not found', instanceName );
         }
         _verbose( AccountsHub.C.Verbose.SERVER, 'pwix:accounts-hub byEmailAddress('+email+')', result );
         return result;
@@ -48,14 +56,23 @@ AccountsHub.s = {
      * @param {String} the user identifier
      * @returns {Promise} which eventually resolves to the user document
      */
-    async byId( collection, id, options={} ){
+    async byId( instanceName, id, options={} ){
         _trace( 'AccountsHub.s.byId()', arguments );
-        assert( collection && collection instanceof Mongo.Collection, 'expects email be a Mongo.Collection, got '+collection );
+        assert( instanceName && _.isString( instanceName ), 'expects instanceName be a string, got '+instanceName );
         assert( id && _.isString( id ), 'expects id be a string, got '+id );
         assert( options && _.isObject( options ), 'expects options be an object, got ',+options );
-        let doc = await collection.findOneAsync({ _id: id }, options );
-        if( doc ){
-            doc = AccountsHub.cleanupUserDocument( doc );
+        let result = null;
+        const ahInstance = AccountsHub.instances[instanceName];
+        if( ahInstance ){
+            assert( ahInstance instanceof AccountsHub.ahClass, 'expects an instance of AccountsHub.ahClass, got '+ahInstance );
+            const collection = ahInstance.collection();
+            assert( collection && collection instanceof Mongo.Collection, 'expects a Mongo.Collection, got '+collection );
+            let doc = await collection.findOneAsync({ _id: id }, options );
+            if( doc ){
+                doc = AccountsHub.cleanupUserDocument( doc );
+            }
+        } else {
+            console.error( 'ahInstance not found', instanceName );
         }
         _verbose( AccountsHub.C.Verbose.SERVER, 'pwix:accounts-hub byId('+id+')', doc );
         return doc;
@@ -70,23 +87,31 @@ AccountsHub.s = {
      *  Each username can only belong to one user
      *  In other words, a username can be considered as a user identiier in Meteor ecosystems
      */
-    async byUsername( collection, username, options={} ){
+    async byUsername( instanceName, username, options={} ){
         _trace( 'AccountsHub.s.byUsername()', arguments );
-        assert( collection && collection instanceof Mongo.Collection, 'expects email be a Mongo.Collection, got '+collection );
+        assert( instanceName && _.isString( instanceName ), 'expects instanceName be a string, got '+instanceName );
         assert( username && _.isString( username ), 'expects email be a string, got '+username );
         assert( options && _.isObject( options ), 'expects options be an object, got ',+options );
-        let docs = null;
         let result = null;
-        if( collection.name === ahOptions._defaults.name ){
-            docs = await Accounts.findUserByUsername( username, options );
-            if( docs ){
-                docs = [ docs ];
+        const ahInstance = AccountsHub.instances[instanceName];
+        if( ahInstance ){
+            assert( ahInstance instanceof AccountsHub.ahClass, 'expects an instance of AccountsHub.ahClass, got '+ahInstance );
+            let docs = null;
+            if( ahInstance.opts().collection() === ahOptions._defaults.name ){
+                docs = await Accounts.findUserByUsername( username, options );
+                if( docs ){
+                    docs = [ docs ];
+                }
+            } else {
+                const collection = ahInstance.collection();
+                assert( collection && collection instanceof Mongo.Collection, 'expects a Mongo.Collection, got '+collection );
+                docs = await collection.find( ahInstance.usernameSelector( username ), options ).fetchAsync();
+            }
+            if( docs && docs.length === 1 && docs[0] ){
+                result = AccountsHub.cleanupUserDocument( docs[0] );
             }
         } else {
-            docs = await collection.find( AccountsHub.usernameSelector( username ), options ).fetchAsync();
-        }
-        if( docs && docs.length === 1 && docs[0] ){
-            result = AccountsHub.cleanupUserDocument( docs[0] );
+            console.error( 'ahInstance not found', instanceName );
         }
         _verbose( AccountsHub.C.Verbose.SERVER, 'pwix:accounts-hub byUsername('+username+')', result );
         return result;

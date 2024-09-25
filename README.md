@@ -159,6 +159,18 @@ Default is the value configured at instanciation time.
 
 #### Functions
 
+##### `AccountsHub.areSame( userA<String|Object>, userB<String|Object> )`
+
+Returns `true`|`false` depending if user A and user B are the same, whatever the way these users are identified, either by their id or by their user document.
+
+##### `AccountsHub.cleanupUserDocument( user<Object> )`
+
+Cleanup and returns the user document without private data:
+
+- `services.resume`
+- `services.password.bcrypt`
+- `profile`
+
 ##### `AccountsHub.configure( o )`
 
 The configuration of the package.

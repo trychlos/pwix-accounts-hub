@@ -4,18 +4,18 @@
 
 Meteor.methods({
     // find a user by one of his/her email addresses
-    async 'AccountsHub.byEmailAddress'( collection, email, options ){
-        return AccountsHub.s.byEmailAddress( collection, email, options );
+    async 'AccountsHub.byEmailAddress'( instanceName, email, options ){
+        return AccountsHub.s.byEmailAddress( instanceName, email, options );
     },
 
     // find a user by his internal (mongo) identifier
-    async 'AccountsHub.byId'( collection, id, options ){
-        return AccountsHub.s.byId( collection, id, options );
+    async 'AccountsHub.byId'( instanceName, id, options ){
+        return AccountsHub.s.byId( instanceName, id, options );
     },
 
     // find a user by his/her username
-    async 'AccountsHub.byUsername'( collection, username, options ){
-        return AccountsHub.s.byUsername( collection, username, options );
+    async 'AccountsHub.byUsername'( instanceName, username, options ){
+        return AccountsHub.s.byUsername( instanceName, username, options );
     },
 
     /*

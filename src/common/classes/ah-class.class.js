@@ -374,7 +374,7 @@ export class ahClass {
         _trace( 'ahClass.byEmailAddress()', arguments );
         assert( email && _.isString( email ), 'expects email be a string, got '+email );
         assert( !options || _.isObject( options ), 'expects options be an object if set, got ',+options );
-        return Meteor.isClient ? await Meteor.callAsync( 'AccountsHub.byEmailAddress', this.collection(), email, options ) : await AccountsHub.s.byEmailAddress( this.collection(), email, options );
+        return Meteor.isClient ? await Meteor.callAsync( 'AccountsHub.byEmailAddress', this.name(), email, options ) : await AccountsHub.s.byEmailAddress( this.name(), email, options );
     }
 
     /**
@@ -387,7 +387,7 @@ export class ahClass {
         _trace( 'ahClass.byId()', arguments );
         assert( id && _.isString( id ), 'expects id be a string, got '+id );
         assert( !options || _.isObject( options ), 'expects options be an object if set, got ',+options );
-        return Meteor.isClient ? await Meteor.callAsync( 'AccountsHub.byId', this.collection(), id, options ) : await AccountsHub.s.byId( this.collection(), id, options );
+        return Meteor.isClient ? await Meteor.callAsync( 'AccountsHub.byId', this.name(), id, options ) : await AccountsHub.s.byId( this.name(), id, options );
     }
 
     /**
@@ -400,7 +400,7 @@ export class ahClass {
         _trace( 'ahClass.byUsername()', arguments );
         assert( username && _.isString( username ), 'expects email be a string, got '+username );
         assert( !options || _.isObject( options ), 'expects options be an object if set, got ',+options );
-        return Meteor.isClient ? await Meteor.callAsync( 'AccountsHub.byUsername', this.collection(), username, options ) : await AccountsHub.s.byUsername( this.collection(), username, options );
+        return Meteor.isClient ? await Meteor.callAsync( 'AccountsHub.byUsername', this.name(), username, options ) : await AccountsHub.s.byUsername( this.name(), username, options );
     }
 
     /**
@@ -466,6 +466,17 @@ export class ahClass {
     }
 
     /**
+     * @locus Anywhere
+     * @param {String} email an email address
+     * @returns {Object} the default Mongo selector for this email address
+     */
+    emailSelector( email ){
+        _trace( 'ahClass.emailSelector()', arguments );
+        let selector = { 'emails.address': email };
+        return selector;
+    }
+
+    /**
      * Getter
      * @returns {String} the name of this instance
      */
@@ -517,5 +528,16 @@ export class ahClass {
         }
         console.error( 'AccountsHub.preferredLabel() expects at least one argument, none found' );
         return null;
+    }
+
+    /**
+     * @locus Anywhere
+     * @param {String} username
+     * @returns {Object} the default Mongo selector for this username
+     */
+    usernameSelector = function( username ){
+        _trace( 'ahClass.usernameSelector()', arguments );
+        let selector = { $or: [{ username: username }, { 'usernames.username': username }]};
+        return selector;
     }
 }
