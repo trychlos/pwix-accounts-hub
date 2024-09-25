@@ -6,8 +6,11 @@
 
 import _ from 'lodash';
 const assert = require( 'assert' ).strict;
+import emailValidator from 'email-validator';
+import zxcvbn from 'zxcvbn';
 
 import { Mongo } from 'meteor/mongo';
+import { pwixI18n } from 'meteor/pwix:i18n';
 
 import { ahOptions } from './ah-options.class.js';
 
@@ -29,6 +32,222 @@ export class ahClass {
 
     // private methods
     //
+
+    /*
+     * @summary: check that the proposed candidate email address is valid, and not already exists
+     */
+    async _checkEmailAddress( email, opts={} ){
+        let result = {
+            ok: true,
+            reason: undefined,
+            errors: [],
+            countOk: 0,
+            countNotOk: 0,
+            canonical: ( email ? email.trim() : '' ).toLowerCase()
+        };
+        // check if the email address is set
+        const _checkSet = async function(){
+            if( opts.testEmpty !== false ){
+                if( result.canonical ){
+                    result.countOk += 1;
+                } else {
+                    result.ok = false;
+                    result.reason = 'email_empty';
+                    result.errors.push( pwixI18n.label( I18N, 'checks.'+result.reason ));
+                    result.countNotOk += 1;
+                }
+            }
+        };
+        await _checkSet();
+        if( !result.ok ){
+            return result;
+        }
+        // check for an email valid syntax
+        const _checkSyntax = async function(){
+            if( opts.testValid !== false ){
+                if( emailValidator.validate( result.canonical )){
+                    result.countOk += 1;
+                } else {
+                    result.ok = false;
+                    result.reason = 'email_invalid';
+                    result.errors.push( pwixI18n.label( I18N, 'checks.'+result.reason ));
+                    result.countNotOk += 1;
+                }
+            }
+        };
+        await _checkSyntax();
+        if( !result.ok ){
+            return result;
+        }
+        // check if the email address already exists
+        const _checkExists = async function(){
+            if( opts.testExists !== false ){
+                result.ok = Boolean( await this.byEmailAddress( result.canonical ));
+            }
+        };
+        if( await _checkExists()){
+            result.ok = false;
+            result.reason = 'email_exists';
+            result.errors.push( pwixI18n.label( I18N, 'checks.'+result.reason ));
+            result.countNotOk += 1;
+        } else {
+            result.countOk += 1;
+        }
+        return result;
+    }
+
+    /*
+        * @summary: check that the proposed candidate password is valid
+        */
+    async _checkPassword( password, opts={} ){
+        let result = {
+            ok: true,
+            reason: undefined,
+            errors: [],
+            countOk: 0,
+            countNotOk: 0,
+            minScore: -1,
+            zxcvbn: null,
+            canonical: password || ''
+        };
+        // first compute min score function of required complexity
+        result.minScore = this._checkPasswordComputeMinScore();
+        result.zxcvbn = zxcvbn( result.canonical );
+        // check if the email address is set
+        const _checkSet = async function(){
+            if( opts.testEmpty !== false ){
+                if( result.canonical ){
+                    result.countOk += 1;
+                } else {
+                    result.ok = false;
+                    result.reason = 'password_empty';
+                    result.errors.push( pwixI18n.label( I18N, 'checks.'+result.reason ));
+                    result.countNotOk += 1;
+                }
+            }
+        };
+        await _checkSet();
+        if( !result.ok ){
+            return result;
+        }
+        // check for minimal length
+        const _checkLength = async function(){
+            if( opts.testLength !== false ){
+                const minLength = AccountsUI.opts().passwordLength();
+                if( result.canonical.length < minLength ){
+                    result.ok = false;
+                    result.reason = 'password_short';
+                    result.errors.push( pwixI18n.label( I18N, 'checks.'+result.reason, minLength ));
+                    result.countNotOk += 1;
+                } else {
+                    result.countOk += 1;
+                }
+            }
+        };
+        await _checkLength();
+        if( !result.ok ){
+            return result;
+        }
+        // check for complexity
+        const _checkComplexity = async function(){
+            if( opts.testComplexity !== false ){
+                if( result.zxcvbn.score < result.minScore ){
+                    result.ok = false;
+                    result.reason = 'password_weak';
+                    result.errors.push( pwixI18n.label( I18N, 'checks.'+result.reason, result.zxcvbn.score, result.minScore ));
+                    result.countNotOk += 1;
+                } else {
+                    result.countOk += 1;
+                }
+            }
+        };
+        await _checkComplexity();
+        return result;
+    }
+
+    // let the configured password strength be converted into a zxcvbn score
+    #scores = [
+        AccountsHub.C.Password.VERYWEAK,
+        AccountsHub.C.Password.WEAK,
+        AccountsHub.C.Password.MEDIUM,
+        AccountsHub.C.Password.STRONG,
+        AccountsHub.C.Password.VERYSTRONG
+    ];
+
+    _checkPasswordComputeMinScore(){
+        const strength = this.opts().passwordStrength();
+        let minScore = -1;
+        for( let i=0 ; i<this.#scores.length && minScore === -1 ; ++i ){
+            if( this._scores[i] === strength ){
+                minScore = i;
+            }
+        }
+        return minScore;
+    }
+
+    /*
+        * @summary: check that the proposed candidate username is valid, and not already exists
+        */
+    async _checkUsername( username, opts={} ){
+        let result = {
+            ok: true,
+            reason: undefined,
+            errors: [],
+            countOk: 0,
+            countNotOk: 0,
+            canonical: username ? username.trim() : ''
+        };
+        // check if the username is set
+        const _checkSet = async function(){
+            if( opts.testEmpty !== false ){
+                if( result.canonical ){
+                    result.countOk += 1;
+                } else {
+                    result.ok = false;
+                    result.reason = 'username_empty';
+                    result.errors.push( pwixI18n.label( I18N, 'checks.'+result.reason ));
+                    result.countNotOk += 1;
+                }
+            }
+        };
+        await _checkSet();
+        if( !result.ok ){
+            return result;
+        }
+        // check for minimal length
+        const _checkLength = async function(){
+            if( opts.testLength !== false ){
+                const minLength = this.opts().usernameLength();
+                if( result.canonical.length < minLength ){
+                    result.ok = false;
+                    result.reason = 'username_short';
+                    result.errors.push( pwixI18n.label( I18N, 'checks.'+result.reason, minLength ));
+                    result.countNotOk += 1;
+                } else {
+                    result.countOk += 1;
+                }
+            }
+        };
+        await _checkLength();
+        if( !result.ok ){
+            return result;
+        }
+        // check if the username already exists
+        const _checkExists = async function(){
+            if( opts.testExists !== false ){
+                result.ok = Boolean( await this.byUsername( result.canonical ));
+            }
+        };
+        if( await _checkExists()){
+            result.ok = false;
+            result.reason = 'username_exists';
+            result.errors.push( pwixI18n.label( I18N, 'checks.'+result.reason ));
+            result.countNotOk += 1;
+        } else {
+            result.countOk += 1;
+        }
+        return result;
+    }
 
     /*
      * @summary returns the preferred label for the user
@@ -198,7 +417,7 @@ export class ahClass {
      *  - canonical: trimmed lowercase email address
      */
     async checkEmailAddress( email, opts={} ){
-        return this._checkEmailAddress( email, opts );
+        return await this._checkEmailAddress( email, opts );
     }
 
     /**
@@ -216,8 +435,8 @@ export class ahClass {
      *  - zxcvbn: the zxcvbn computed result
      *  - canonical: the checked password
      */
-    checkPassword( password, opts={} ){
-        return this._checkPassword( password, opts );
+    async checkPassword( password, opts={} ){
+        return await this._checkPassword( password, opts );
     }
 
     /**
@@ -234,7 +453,7 @@ export class ahClass {
      *  - username: trimmed username
      */
     async checkUsername( username, opts={} ){
-        return this._checkUsername( username, opts );
+        return await this._checkUsername( username, opts );
     }
 
     /**

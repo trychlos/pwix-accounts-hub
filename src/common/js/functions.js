@@ -65,6 +65,17 @@ AccountsHub.cleanupUserDocument = function( user ){
 
 /**
  * @locus Anywhere
+ * @param {String} email an email address
+ * @returns {Object} the default Mongo selector for this email address
+ */
+AccountsHub.emailSelector = function( email ){
+    _trace( 'AccountsHub.emailSelector()', arguments );
+    let selector = { 'emails.address': email };
+    return selector;
+}
+
+/**
+ * @locus Anywhere
  * @param {String} email the email address to be examined
  * @param {Object} user the (optional) user document
  * @returns {Promise} which eventually will resolve to a true|false Boolean
@@ -130,3 +141,14 @@ AccountsHub.update = async function( user, modifier, options ){
     return res;
 };
 */
+
+/**
+ * @locus Anywhere
+ * @param {String} username
+ * @returns {Object} the default Mongo selector for this username
+ */
+AccountsHub.usernameSelector = function( username ){
+    _trace( 'AccountsHub.usernameSelector()', arguments );
+    let selector = { $or: [{ username: username }, { 'usernames.username': username }]};
+    return selector;
+}
