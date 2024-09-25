@@ -29,39 +29,6 @@ AccountsHub.areSame = function( userA, userB ){
 
 /**
  * @locus Anywhere
- * @param {Object} document
- * @returns {Object} the cleaned-up user document
- *
- * make sure the password, even crypted, is not returned:
- * {
- *     _id: '55QDvyxocA8XBnyTy',
- *     createdAt: 2023-02-08T21:16:56.851Z,
- *     services: { password: {}, email: { verificationTokens: [Array] } },
- *     username: 'cccc',
- *     emails: [ { address: 'cccc@ccc.cc', verified: true } ],
- *     isAllowed: true,
- *     createdBy: 'EqvmJAhNAZTBAECya',
- *     lastConnection: 2023-02-09T13:22:14.057Z,
- *     updatedAt: 2023-02-09T13:25:16.114Z,
- *     updatedBy: 'EqvmJAhNAZTBAECya'
- * }
- */
-AccountsHub.cleanupUserDocument = function( user ){
-    _trace( 'AccountsHub.cleanupUserDocument()', arguments );
-    if( user ){
-        if( user.services ){
-            delete user.services.resume;
-            if( user.services.password ){
-                delete user.services.password.bcrypt;
-            }
-        }
-        delete user.profile;
-    }
-    return user;
-}
-
-/**
- * @locus Anywhere
  * @param {String} email the email address to be examined
  * @param {Object} user the (optional) user document
  * @returns {Promise} which eventually will resolve to a true|false Boolean

@@ -43,7 +43,7 @@ AccountsHub.s = {
                 docs = await collection.find( ahInstance.emailSelector( email ), options ).fetchAsync();
             }
             if( docs && docs.length === 1 && docs[0] ){
-                result = AccountsHub.cleanupUserDocument( docs[0] );
+                result = AccountsHub.s.cleanupUserDocument( docs[0] );
             }
         } else {
             console.error( 'ahInstance not found', instanceName );
@@ -69,7 +69,7 @@ AccountsHub.s = {
             assert( collection && collection instanceof Mongo.Collection, 'expects a Mongo.Collection, got '+collection );
             let doc = await collection.findOneAsync({ _id: id }, options );
             if( doc ){
-                doc = AccountsHub.cleanupUserDocument( doc );
+                doc = AccountsHub.s.cleanupUserDocument( doc );
             }
         } else {
             console.error( 'ahInstance not found', instanceName );
@@ -108,13 +108,48 @@ AccountsHub.s = {
                 docs = await collection.find( ahInstance.usernameSelector( username ), options ).fetchAsync();
             }
             if( docs && docs.length === 1 && docs[0] ){
-                result = AccountsHub.cleanupUserDocument( docs[0] );
+                result = AccountsHub.s.cleanupUserDocument( docs[0] );
             }
         } else {
             console.error( 'ahInstance not found', instanceName );
         }
         _verbose( AccountsHub.C.Verbose.SERVER, 'pwix:accounts-hub byUsername('+username+')', result );
         return result;
+    },
+
+    /**
+     * @locus Server
+     * @param {Object} document
+     * @returns {Object} the cleaned-up user document
+     *
+     * make sure the password, even crypted, is not returned:
+     * {
+     *     _id: '55QDvyxocA8XBnyTy',
+     *     createdAt: 2023-02-08T21:16:56.851Z,
+     *     services: { password: {}, email: { verificationTokens: [Array] } },
+     *     username: 'cccc',
+     *     emails: [ { address: 'cccc@ccc.cc', verified: true } ],
+     *     isAllowed: true,
+     *     createdBy: 'EqvmJAhNAZTBAECya',
+     *     lastConnection: 2023-02-09T13:22:14.057Z,
+     *     updatedAt: 2023-02-09T13:25:16.114Z,
+     *     updatedBy: 'EqvmJAhNAZTBAECya'
+     * }
+     * 
+     * Note: do NOT expose this function in client-side world. This would be a security risk as a mal-intentioned user could just override it.
+     */
+    cleanupUserDocument( user ){
+        _trace( 'AccountsHub.s.cleanupUserDocument()', arguments );
+        if( user ){
+            if( user.services ){
+                delete user.services.resume;
+                if( user.services.password ){
+                    delete user.services.password.bcrypt;
+                }
+            }
+            delete user.profile;
+        }
+        return user;
     },
 
     /**
