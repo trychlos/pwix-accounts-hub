@@ -4,8 +4,8 @@
 
 Meteor.methods({
     // find a user by one of his/her email addresses
-    async 'AccountsHub.byEmail'( collection, email, options ){
-        return AccountsHub.s.byEmail( collection, email, options );
+    async 'AccountsHub.byEmailAddress'( collection, email, options ){
+        return AccountsHub.s.byEmailAddress( collection, email, options );
     },
 
     // find a user by his internal (mongo) identifier

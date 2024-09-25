@@ -21,13 +21,24 @@ AccountsHub._defaults = {
  */
 AccountsHub.configure = function( o ){
     if( o && _.isObject( o )){
-        _conf = AccountsHub._conf.get();
-        _.merge( _conf, AccountsHub._defaults, o );
-        AccountsHub._conf.set( _conf );
-        // be verbose if asked for
-        if( _conf.verbosity & AccountsHub.C.Verbose.CONFIGURE ){
-            //console.log( 'pwix:accounts-manager configure() with', o, 'building', AccountsList._conf );
-            console.log( 'pwix:accounts-HUB configure() with', o );
+        // check that keys exist
+        let notexist = [];
+        Object.keys( o ).forEach(( it ) => {
+            if( !Object.keys( AccountsHub._defaults ).includes( it )){
+                notexist.push( it );
+            }
+        });
+        if( notexist.length ){
+            console.warn( 'pwix:accounts-hub ignoring reconfiguration due to not existing keys', notexist );
+        } else {
+            _conf = AccountsHub._conf.get();
+            _.merge( _conf, AccountsHub._defaults, o );
+            AccountsHub._conf.set( _conf );
+            // be verbose if asked for
+            if( _conf.verbosity & AccountsHub.C.Verbose.CONFIGURE ){
+                //console.log( 'pwix:accounts-manager configure() with', o, 'building', AccountsList._conf );
+                console.log( 'pwix:accounts-hub configure() with', o );
+            }
         }
     }
     // also acts as a getter

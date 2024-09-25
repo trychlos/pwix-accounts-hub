@@ -121,7 +121,7 @@ The class constructor is called with an object as argument, with following keys:
 
         The name of the underlying Mongo collection, defaulting to `name`
 
-- `async byEmail( email [, options ])`
+- `async byEmailAddress( email [, options ])`
 
 Returns a Promise which will resolve to the cleaned up document of the unique user which holds the provided email address, or null if none or several (which would be a bug anyway).
 

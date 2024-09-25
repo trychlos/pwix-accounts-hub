@@ -77,7 +77,7 @@ AccountsHub.isEmailVerified = async function( email, user=null ){
     if( user ){
         return AccountsHub._isEmailVerified( email, user );
     }
-    return AccountsHub.byEmail( email )
+    return AccountsHub.byEmailAddress( email )
         .then(( user ) => { return AccountsHub._isEmailVerified( email, user ); });
 }
         */

@@ -22,8 +22,8 @@ AccountsHub.s = {
      *  Each email address can only belong to one user
      *  In other words, an email address can be considered as a user identiier in Meteor ecosystems
      */
-    async byEmail( collection, email, options={} ){
-        _trace( 'AccountsHub.s.byEmail()', arguments );
+    async byEmailAddress( collection, email, options={} ){
+        _trace( 'AccountsHub.s.byEmailAddress()', arguments );
         assert( collection && collection instanceof Mongo.Collection, 'expects email be a Mongo.Collection, got '+collection );
         assert( email && _.isString( email ), 'expects email be a string, got '+email );
         assert( options && _.isObject( options ), 'expects options be an object, got ',+options );
@@ -40,7 +40,7 @@ AccountsHub.s = {
         if( docs && docs.length === 1 && docs[0] ){
             result = AccountsHub.cleanupUserDocument( docs[0] );
         }
-        _verbose( AccountsHub.C.Verbose.SERVER, 'pwix:accounts-hub byEmail('+email+')', result );
+        _verbose( AccountsHub.C.Verbose.SERVER, 'pwix:accounts-hub byEmailAddress('+email+')', result );
         return result;
 },
 
