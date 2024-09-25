@@ -50,7 +50,7 @@ The class constructor is called with an object as argument, with following keys:
 
         The name of the instance.
 
-        Is mandatory, must be unique.
+        Defaults to 'users' and thus addresses the standard Meteor 'users' collection.
 
     - `haveEmailAddress`
     - `haveUsername`
@@ -72,6 +72,34 @@ The class constructor is called with an object as argument, with following keys:
 
         Please be conscious that some features of your application may want display an identifier for each user. It would be a security hole to let the application display a verified email address anywhere, as this would be some sort of spam magnet!
 
+    - `passwordLength`
+
+        The minimal required password length when setting a new password, either when creating a new account of when changing the password of an existing account.
+
+        The package doesn't hardcodes by itself a minimal 'minimal length', and so will accept even a minimal length of, say, 1 character!
+
+        Defaults to ten (10) characters.
+
+        **Please note that, for security reasons, you shouldn't set the minimal password length less than this default, unless you are absolutely sure of what you are doing.**
+
+    - `passwordStrength`
+
+        The minimal required password strength when setting a new password, either when creating a new account of when changing the password of an existing account.
+
+        `pwix:accounts-uhubi` makes use of the [zxcvbn](https://www.npmjs.com/package/zxcvbn) package to estimate the strength of entered passwords. The estimated strength can take folloging values:
+
+        - `AccountsHub.C.Password.VERYWEAK`: too guessable, risky password (guesses < 10^3)
+        - `AccountsHub.C.Password.WEAK`: very guessable, protection from throttled online attacks (guesses < 10^6)
+        - `AccountsHub.C.Password.MEDIUM`: somewhat guessable, protection from unthrottled online attacks (guesses < 10^8)
+        - `AccountsHub.C.Password.STRONG`: safely unguessable, moderate protection from offline slow-hash scenario (guesses < 10^10)
+        - `AccountsHub.C.Password.VERYSTRONG`: very unguessable, strong protection from offline slow-hash scenario (guesses >= 10^10)
+
+        The package doesn't hardcodes by itself a minimal 'required strength', and so will accept even a minimal length of, say, `AccountsHub.C.Password.VERYWEAK`!
+
+        Defaults to `AccountsHub.C.Password.STRONG`.
+
+        **Please note that, for security reasons, you shouldn't set the password required strength less than this default, unless you are absolutely sure of what you are doing.**
+
     - `preferredLabel`
 
         When not explicitely specified, which label choose to qualify a user account ? Following values are accepted:
@@ -80,6 +108,14 @@ The class constructor is called with an object as argument, with following keys:
         - `AccountsHub.C.PreferredLabel.EMAIL_ADDRESS`
 
         Defaults to `AccountsHub.C.PreferredLabel.EMAIL_ADDRESS`, though the actually displayed label heavily depends of the runtime configuration as we try to always display something. At the last, the returned label may be nothing else than the document identifier.
+
+    - `usernameLength`
+
+        The minimal required username length.
+
+        The package doesn't hardcodes by itself a minimal 'minimal length'.
+
+        Defaults to six (6) characters.
 
 - `async byEmail( email [, options ])`
 

@@ -40,9 +40,7 @@ export class ahClass {
      */
     constructor( args ){
         // check that the name exists and is unique
-        assert( args.name, 'expects name be set, got '+args.name );
-        assert( _.isString( args.name ), 'expects name be a string, got '+args.name );
-        assert( !AccountsHub.instance[args.name], 'expects name be unique but already exists '+args.name );
+        args.name = args.name || 'users';
         this.#args = args;
         this.#opts = new ahOptions( args );
 
@@ -57,5 +55,13 @@ export class ahClass {
      */
     name(){
         return this.#args.name;
+    }
+
+    /**
+     * Getter
+     * @returns {ahOptions} the instanciation options
+     */
+    opts(){
+        return this.#opts;
     }
 }
