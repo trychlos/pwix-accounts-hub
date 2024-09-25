@@ -7,6 +7,8 @@
 import _ from 'lodash';
 const assert = require( 'assert' ).strict;
 
+import { Mongo } from 'meteor/mongo';
+
 import { ahOptions } from './ah-options.class.js';
 
 export class ahClass {
@@ -18,6 +20,12 @@ export class ahClass {
     //
     #args = null;
     #opts = null;
+
+    // runtime
+    //
+
+    // the mongo collection
+    #collection = null;
 
     // private functions
     //
@@ -39,13 +47,23 @@ export class ahClass {
      * @returns {ahClass}
      */
     constructor( args ){
-        // check that the name exists and is unique
-        args.name = args.name || 'users';
         this.#args = args;
         this.#opts = new ahOptions( args );
 
-        // at the end only, register this instance
-        AccountsHub.instance[args.name] = this;
+        // if the name is already instanciated, then just return it
+        if( AccountsHub.instances[this.name()] ){
+            return AccountsHub.instances[this.name()];
+        }
+
+        // define the Mongo collection
+        if( this.#opts().collection() === 'users' ){
+            this.#collection = Meteor.users;
+        } else {
+            this.#collection = new Mongo.Collection( this.#opts().collection());
+        }
+
+        // at the end only, register this new instance
+        AccountsHub.instances[this.name()] = this;
         return this;
     }
 
@@ -54,7 +72,7 @@ export class ahClass {
      * @returns {String} the name of this instance
      */
     name(){
-        return this.#args.name;
+        return this.#opts().name();
     }
 
     /**

@@ -14,6 +14,7 @@ export class ahOptions extends Options.Base {
     static _defaults = {
         haveEmailAddress: AccountsHub.C.Identifier.MANDATORY,
         haveUsername: AccountsHub.C.Identifier.NONE,
+        name: 'users',
         passwordLength: 10,
         passwordStrength: AccountsHub.C.Password.STRONG,
         usernameLength: 6,
@@ -71,6 +72,15 @@ export class ahOptions extends Options.Base {
 
     /**
      * Getter/Setter
+     * @param {String|Function} value the name of the underlying collection, defaulting to name
+     * @returns {String}
+     */
+    collection( value ){
+        return this.base_gsStringObjectFn( 'collection', value, { default: this.name() });
+    }
+
+    /**
+     * Getter/Setter
      * @param {String|Function} value whether the application wants an email address
      * @returns {String}
      */
@@ -85,6 +95,15 @@ export class ahOptions extends Options.Base {
      */
     haveUsername( value ){
     return this.base_gsStringObjectFn( 'haveUsername', value, { default: ahOptions._defaults.haveUsername, ref: ahOptions.Identifiers });
+    }
+
+    /**
+     * Getter/Setter
+     * @param {String|Function} value the name of the instance, defaulting to 'users'
+     * @returns {String}
+     */
+    name( value ){
+        return this.base_gsStringObjectFn( 'name', value, { default: ahOptions._defaults.name });
     }
 
     /**
