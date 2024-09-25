@@ -29,7 +29,8 @@ AccountsHub.C = {
     Verbose: {
         NONE:           0,
         CONFIGURE:      0x01 << 0,
-        FUNCTIONS:      0x01 << 1
+        FUNCTIONS:      0x01 << 1,
+        SERVER:         0x01 << 2
     }
 };
 

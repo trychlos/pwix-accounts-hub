@@ -189,6 +189,14 @@ Known configuration options are:
 
     Trace the calls to `configure()` function.
 
+    - `AccountsHub.C.Verbose.FUNCTIONS`
+
+    Trace all function calls.
+
+    - `AccountsHub.C.Verbose.SERVER`
+
+    Trace server function calls and their result.
+
     Defaults to `AccountsHub.C.Verbose.CONFIGURE`.
 
 Please note that `AccountsHub.configure()` method should be called in the same terms both in client and server sides.

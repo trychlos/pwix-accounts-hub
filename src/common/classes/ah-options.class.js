@@ -36,11 +36,11 @@ export class ahOptions extends Options.Base {
 
     // password strength
     static Strength = [
-        AccountsUI.C.Password.VERYWEAK,
-        AccountsUI.C.Password.WEAK,
-        AccountsUI.C.Password.MEDIUM,
-        AccountsUI.C.Password.STRONG,
-        AccountsUI.C.Password.VERYSTRONG
+        AccountsHub.C.Password.VERYWEAK,
+        AccountsHub.C.Password.WEAK,
+        AccountsHub.C.Password.MEDIUM,
+        AccountsHub.C.Password.STRONG,
+        AccountsHub.C.Password.VERYSTRONG
     ];
 
     // private data
@@ -66,6 +66,7 @@ export class ahOptions extends Options.Base {
      * @returns {ahOptions}
      */
     constructor( options ){
+        _trace( 'ahOptions.ahOptions()', arguments );
         super( options );
         return this;
     }
@@ -76,6 +77,7 @@ export class ahOptions extends Options.Base {
      * @returns {String}
      */
     collection( value ){
+        _trace( 'ahOptions.collection()', arguments );
         return this.base_gsStringObjectFn( 'collection', value, { default: this.name() });
     }
 
@@ -85,6 +87,7 @@ export class ahOptions extends Options.Base {
      * @returns {String}
      */
     haveEmailAddress( value ){
+        _trace( 'ahOptions.haveEmailAddress()', arguments );
         return this.base_gsStringObjectFn( 'haveEmailAddress', value, { default: ahOptions._defaults.haveEmailAddress, ref: ahOptions.Identifiers });
     }
 
@@ -94,7 +97,8 @@ export class ahOptions extends Options.Base {
      * @returns {String}
      */
     haveUsername( value ){
-    return this.base_gsStringObjectFn( 'haveUsername', value, { default: ahOptions._defaults.haveUsername, ref: ahOptions.Identifiers });
+        _trace( 'ahOptions.haveUsername()', arguments );
+        return this.base_gsStringObjectFn( 'haveUsername', value, { default: ahOptions._defaults.haveUsername, ref: ahOptions.Identifiers });
     }
 
     /**
@@ -103,6 +107,7 @@ export class ahOptions extends Options.Base {
      * @returns {String}
      */
     name( value ){
+        _trace( 'ahOptions.name()', arguments );
         return this.base_gsStringObjectFn( 'name', value, { default: ahOptions._defaults.name });
     }
 
@@ -114,6 +119,7 @@ export class ahOptions extends Options.Base {
      * @returns {Integer}
      */
     passwordLength( value ){
+        _trace( 'ahOptions.passwordLength()', arguments );
         return this.base_gsIntegerFn( 'passwordLength', value, { check: ( val ) => { return val >= 0 }, default: ahOptions._defaults.passwordLength });
     }
 
@@ -123,6 +129,7 @@ export class ahOptions extends Options.Base {
      * @returns {String}
      */
     passwordStrength( value ){
+        _trace( 'ahOptions.passwordStrength()', arguments );
         return this.base_gsStringFn( 'passwordStrength', value, { default: ahOptions._defaults.passwordStrength, ref: ahOptions.Strength });
     }
 
@@ -132,6 +139,7 @@ export class ahOptions extends Options.Base {
      * @returns {String}
      */
     preferredLabel( value ){
+        _trace( 'ahOptions.preferredLabel()', arguments );
         return this.base_gsStringObjectFn( 'preferredLabel', value, { default: ahOptions._defaults.preferredLabel, ref: ahOptions.Labels });
     }
 
@@ -141,6 +149,7 @@ export class ahOptions extends Options.Base {
      * @returns {Integer}
      */
     usernameLength( value ){
+        _trace( 'ahOptions.usernameLength()', arguments );
         return this.base_gsIntegerFn( 'usernameLength', value, { check: ( val ) => { return val >= 0 }, default: ahOptions._defaults.usernameLength });
     }
 }

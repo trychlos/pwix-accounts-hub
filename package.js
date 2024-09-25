@@ -25,7 +25,6 @@ Package.onTest( function( api ){
 function configure( api ){
     api.versionsFrom([ '2.9.0', '3.0.1' ]);
     api.use( 'accounts-base' );
-    api.use( 'check' );
     api.use( 'ecmascript' );
     api.use( 'mongo' );
     api.use( 'pwix:i18n@1.5.0' );
