@@ -29,14 +29,13 @@ AccountsHub.configure = function( o ){
             }
         });
         if( notexist.length ){
-            console.warn( 'pwix:accounts-hub ignoring reconfiguration due to not existing keys', notexist );
+            console.warn( 'pwix:accounts-hub ignoring (re)configuration due to not existing keys', notexist );
         } else {
             _conf = AccountsHub._conf.get();
             _.merge( _conf, AccountsHub._defaults, o );
             AccountsHub._conf.set( _conf );
             // be verbose if asked for
             if( _conf.verbosity & AccountsHub.C.Verbose.CONFIGURE ){
-                //console.log( 'pwix:accounts-manager configure() with', o, 'building', AccountsList._conf );
                 console.log( 'pwix:accounts-hub configure() with', o );
             }
         }

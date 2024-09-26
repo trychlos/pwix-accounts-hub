@@ -31,6 +31,12 @@ AccountsHub.C = {
         CONFIGURE:      0x01 << 0,
         FUNCTIONS:      0x01 << 1,
         SERVER:         0x01 << 2
+    },
+
+    // what to do when email cannot be sent
+    WrongEmail: {
+        OK:    'OK',
+        ERROR: 'ERROR'
     }
 };
 

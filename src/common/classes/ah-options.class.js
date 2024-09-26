@@ -14,11 +14,14 @@ export class ahOptions extends Options.Base {
     static _defaults = {
         haveEmailAddress: AccountsHub.C.Identifier.MANDATORY,
         haveUsername: AccountsHub.C.Identifier.NONE,
+        informWrongEmail: AccountsHub.C.WrongEmail.ERROR,
         name: 'users',
+        onSignin: Meteor.loginWithPassword,
         passwordLength: 10,
         passwordStrength: AccountsHub.C.Password.STRONG,
-        usernameLength: 6,
-        preferredLabel: AccountsHub.C.PreferredLabel.EMAIL_ADDRESS
+        preferredLabel: AccountsHub.C.PreferredLabel.EMAIL_ADDRESS,
+        sendVerificationEmail: true,
+        usernameLength: 6
     };
 
     // have email address / username
@@ -41,6 +44,12 @@ export class ahOptions extends Options.Base {
         AccountsHub.C.Password.MEDIUM,
         AccountsHub.C.Password.STRONG,
         AccountsHub.C.Password.VERYSTRONG
+    ];
+
+    // inform the user of a wrong email
+    static WrongEmail = [
+        AccountsHub.C.WrongEmail.OK,
+        AccountsHub.C.WrongEmail.ERROR
     ];
 
     // private data
@@ -73,8 +82,9 @@ export class ahOptions extends Options.Base {
 
     /**
      * Getter/Setter
-     * @param {String|Function} value the name of the underlying collection, defaulting to name
+     * @param {String|Function} value the name of the underlying collection, defaulting to instance name
      * @returns {String}
+     *  See ahInstance.collection() for the Mongo collection
      */
     collection( value ){
         _trace( 'ahOptions.collection()', arguments );
@@ -103,12 +113,31 @@ export class ahOptions extends Options.Base {
 
     /**
      * Getter/Setter
+     * @param {String|Function} value how to inform the user of a bad email address when asking for resetting a password
+     * @returns {String}
+     */
+    informWrongEmail( value ){
+        return this.base_gsStringFn( 'informWrongEmail', value, { default: ahOptions._defaults.informWrongEmail, ref: ahOptions.WrongEmail });
+    }
+
+    /**
+     * Getter/Setter
      * @param {String|Function} value the name of the instance, defaulting to 'users'
      * @returns {String}
      */
     name( value ){
         _trace( 'ahOptions.name()', arguments );
         return this.base_gsStringObjectFn( 'name', value, { default: ahOptions._defaults.name });
+    }
+
+    /**
+     * Getter/Setter
+     * @param {Function} value a callback function
+     * @returns {String}
+     */
+    onSignin( value ){
+        _trace( 'ahOptions.onSignin()', arguments );
+        return this.base_gsFn( 'onSignin', value, { default: ahOptions._defaults.onSignin });
     }
 
     /**
@@ -141,6 +170,15 @@ export class ahOptions extends Options.Base {
     preferredLabel( value ){
         _trace( 'ahOptions.preferredLabel()', arguments );
         return this.base_gsStringObjectFn( 'preferredLabel', value, { default: ahOptions._defaults.preferredLabel, ref: ahOptions.Labels });
+    }
+
+    /**
+     * Getter/Setter
+     * @param {Boolean|Function} flag whether we want an email verification be sent on user creation
+     * @returns {Boolean}
+     */
+    sendVerificationEmail( flag ){
+        return this.base_gsBoolFn( 'sendVerificationEmail', flag, { default: ahOptions._defaults.sendVerificationEmail });
     }
 
     /**

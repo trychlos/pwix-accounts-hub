@@ -136,7 +136,7 @@ AccountsHub.s = {
      *     updatedBy: 'EqvmJAhNAZTBAECya'
      * }
      * 
-     * Note: do NOT expose this function in client-side world. This would be a security risk as a mal-intentioned user could just override it.
+     * Note: do NOT expose this function in client-side world. This would be a security risk as a malicious user could just override it.
      */
     cleanupUserDocument( user ){
         _trace( 'AccountsHub.s.cleanupUserDocument()', arguments );

@@ -28,6 +28,7 @@ export class ahClass {
     //
 
     // the mongo collection
+    //  see this.opts().collection() for the collection name
     #collection = null;
 
     // private methods
@@ -97,9 +98,10 @@ export class ahClass {
     }
 
     /*
-        * @summary: check that the proposed candidate password is valid
-        */
+     * @summary: check that the proposed candidate password is valid
+     */
     async _checkPassword( password, opts={} ){
+        const self = this;
         let result = {
             ok: true,
             reason: undefined,
@@ -133,7 +135,7 @@ export class ahClass {
         // check for minimal length
         const _checkLength = async function(){
             if( opts.testLength !== false ){
-                const minLength = AccountsUI.opts().passwordLength();
+                const minLength = self.opts().passwordLength();
                 if( result.canonical.length < minLength ){
                     result.ok = false;
                     result.reason = 'password_short';
@@ -178,7 +180,7 @@ export class ahClass {
         const strength = this.opts().passwordStrength();
         let minScore = -1;
         for( let i=0 ; i<this.#scores.length && minScore === -1 ; ++i ){
-            if( this._scores[i] === strength ){
+            if( this.#scores[i] === strength ){
                 minScore = i;
             }
         }
@@ -186,8 +188,8 @@ export class ahClass {
     }
 
     /*
-        * @summary: check that the proposed candidate username is valid, and not already exists
-        */
+     * @summary: check that the proposed candidate username is valid, and not already exists
+     */
     async _checkUsername( username, opts={} ){
         let result = {
             ok: true,
@@ -349,17 +351,22 @@ export class ahClass {
 
         // if the name is already instanciated, then just return it
         if( AccountsHub.instances[this.name()] ){
+            console.debug( 'pwix:accounts-hub returning already instanciated ahInstance', this.name());
             return AccountsHub.instances[this.name()];
         }
 
+        console.debug( 'pwix:accounts-hub instanciating ahInstance', this.name());
+
         // define the Mongo collection
         if( this.opts().collection() === 'users' ){
+            //console.debug( 'pwix:accounts-hub using users collection' );
             this.#collection = Meteor.users;
         } else {
+            //console.debug( 'pwix:accounts-hub defining collection', this.opts().collection());
             this.#collection = new Mongo.Collection( this.opts().collection());
         }
 
-        // at the end only, register this new instance
+        // register this new instance
         AccountsHub.instances[this.name()] = this;
         return this;
     }
@@ -408,8 +415,9 @@ export class ahClass {
      * @locus Anywhere
      * @param {String} email the email address to be checked
      * @param {Object} opts:
-     *  - testSyntax: true|false, defaulting to true (test the syntax, returning an error if empty or bad syntax)
-     *  - testExistance: true|false, defaulting to true (test the existance, positionning the flag in result object)
+     *  - testEmpty: whether to test if the email address is set, defaulting to true
+     *  - testValid: whether to test for syntax validity, defaulting to true
+     *  - testExists: whether to test for existance, defaulting to true
      * @returns {Promise} which resolves to the check result, as:
      *  - ok: true|false
      *  - reason: if not ok, the first reason
@@ -425,8 +433,9 @@ export class ahClass {
      * @locus Anywhere
      * @param {String} password the password to be checked
      * @param {Object} opts:
-     *  - testLength: true|false, defaulting to true (test the length vs the globally configured option)
-     *  - testComplexity: true|false, defaulting to true (test the complexity)
+     *  - testEmpty: whether to test if the password is set, defaulting to true
+     *  - testLength: whether to test for password minimal length, defaulting to true
+     *  - testComplexity: whether to test for password minimal complexity, defaulting to true
      * @returns {Object} the check result, as:
      *  - ok: true|false
      *  - reason: if not ok, the first reason
@@ -444,8 +453,9 @@ export class ahClass {
      * @locus Anywhere
      * @param {String} username the username to be checked
      * @param {Object} an option object with:
-     *  - testLength: true|false, defaulting to true (test the length vs the globally configured option)
-     *  - testExists: true|false, defaulting to true (test the existance, positionning the flag in result object)
+     *  - testEmpty: whether to test if the username is set, defaulting to true
+     *  - testLength: whether to test for username minimal length, defaulting to true
+     *  - testExists: whether to test for existance, defaulting to true
      * @returns {Promise} which resolves to the check result, as:
      *  - ok: true|false
      *  - errors: [] an array of localized error messages
@@ -459,6 +469,7 @@ export class ahClass {
     /**
      * Getter
      * @returns {Mongo.Collection} the Mongo collection attached to this instance
+     *  See this.opts().collection() for the collection name
      */
     collection(){
         _trace( 'ahClass.collection()', arguments );

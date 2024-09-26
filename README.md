@@ -16,6 +16,14 @@ But you may have the case where the application not only needs this standard col
 
 Mutualizing most of the needed tools and configurations requires so that each of these accounts entities may be configured, and managed separately. This is the goal of this package.
 
+## Account management
+
+Meteor proposes a default standard 'users' accounts collection, and provides packages to manage it, and notably `accounts-base` and `accounts-password`. These package manage the accounts collection in such a way that there can be only **one** accounts collection in a Meteor system.
+
+This is not very troublesome as long as we look at the user interface, or the collection schema, as they are easily overridable.
+
+But we enter in trouble as soon as we want take advantage of password reset, account enrollment or email verification workflows. These are so tied to the collection itself that it is not possible to configure them to use, for example, different templates or different callbacks.
+
 ## Installation
 
 This Meteor package is installable with the usual command:
@@ -72,6 +80,31 @@ The class constructor is called with an object as argument, with following keys:
 
         Please be conscious that some features of your application may want display an identifier for each user. It would be a security hole to let the application display a verified email address anywhere, as this would be some sort of spam magnet!
 
+    - `informWrongEmail`
+
+        Whether to inform the user that the email address he/she has entered when asking for resetting a password is not known of our users database.
+
+        Rationale:
+
+            Meteor default is to return a `[403] Something went wrong. Please check your credentials.` error message.
+
+            Some security guys consider that returning such error would let a malicious user to check which email addresses are registered - or not - in the accounts database, so would lead to a potential confidentiality break and information leak.
+
+        This parameter let the application decide what to do:
+
+        - `AccountsHub.C.WrongEmail.OK`: say the user that the email has been sucessfully sent, even when this is not the case
+        - `AccountsHub.C.WrongEmail.ERROR`: say the user that something went wrong (Meteor standard behavior).
+
+        Defaults to `AccountsHub.C.WrongEmail.ERROR`.
+
+    - `onSignin`
+
+        A client-side function to be called when the managed account wants to log in.
+
+        Prototype of the function is `onSignin( userid<String>, credentials<Any> [, callback<Callback> ])`
+
+        Defaults to standard `Meteor.loginWithPassword()`.
+
     - `passwordLength`
 
         The minimal required password length when setting a new password, either when creating a new account of when changing the password of an existing account.
@@ -108,6 +141,16 @@ The class constructor is called with an object as argument, with following keys:
         - `AccountsHub.C.PreferredLabel.EMAIL_ADDRESS`
 
         Defaults to `AccountsHub.C.PreferredLabel.EMAIL_ADDRESS`, though the actually displayed label heavily depends of the runtime configuration as we try to always display something. At the last, the returned label may be nothing else than the document identifier.
+
+    - `sendVerificationEmail`
+
+        Whether to send a verification email to each newly created user.
+
+        This should be kept by the application consistent with the same parameter of `accounts-base` Meteor package.
+
+        Accepted values are `true` or `false`.
+
+        Defaults to `true`.
 
     - `usernameLength`
 

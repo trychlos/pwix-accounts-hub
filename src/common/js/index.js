@@ -7,11 +7,12 @@ import './constants.js';
 import './trace.js';
 
 import { ahClass } from '../classes/ah-class.class.js';
+import { ahOptions } from '../classes/ah-options.class.js';
 
-//import './checks.js';
 import './configure.js';
 import './functions.js';
 import './i18n.js';
-//import './private.js';
+import './startup.js';
 
 AccountsHub.ahClass = ahClass;
+AccountsHub.ahOptions = ahOptions;

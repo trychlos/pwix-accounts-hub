@@ -14,7 +14,7 @@ AccountsHub.i18n = {
                 password_short: 'Le mot de passe est trop court (mini=%s)',
                 password_weak: 'Le mot de passe est trop faible (score=%s, mini=%s)',
                 username_empty: 'Le nom d\'utilisateur n\'est pas renseigné',
-                username_exists: 'Le nom d\'utilisateur est déjà utilisé',
+                username_exists: 'Le nom d\'utilisateur existe déjà',
                 username_short: 'Le nom d\'utilisateur est trop court (mini=%s)'
             }
         }
