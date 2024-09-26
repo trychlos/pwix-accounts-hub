@@ -297,9 +297,10 @@ export class ahClass {
      */
     async _preferredLabelById( id, preferred, result ){
         _trace( 'ahClass._preferredLabelById()', arguments );
+        const self = this;
         return this.byId( id )
             .then(( user ) => {
-                return user ? AccountsHub._preferredLabelByDoc( user, preferred, result ) : null;
+                return user ? self._preferredLabelByDoc( user, preferred, result ) : null;
             });
     }
 
@@ -394,7 +395,10 @@ export class ahClass {
         _trace( 'ahClass.byId()', arguments );
         assert( id && _.isString( id ), 'expects id be a string, got '+id );
         assert( !options || _.isObject( options ), 'expects options be an object if set, got ',+options );
-        return Meteor.isClient ? await Meteor.callAsync( 'AccountsHub.byId', this.name(), id, options ) : await AccountsHub.s.byId( this.name(), id, options );
+        const res = Meteor.isClient ? await Meteor.callAsync( 'AccountsHub.byId', this.name(), id, options ) : await AccountsHub.s.byId( this.name(), id, options );
+        console.debug( 'res', res );
+        return res;
+        //return await( Meteor.isClient ? Meteor.callAsync( 'AccountsHub.byId', this.name(), id, options ) : AccountsHub.s.byId( this.name(), id, options ));
     }
 
     /**
@@ -518,11 +522,12 @@ export class ahClass {
     async preferredLabel( arg, preferred=null ){
         _trace( 'ahClass.preferredLabel()', arguments );
         let result = this._preferredLabelInitialResult( arg, preferred );
+        const self = this;
         if( result ){
             // if a user identifier is provided, returns a Promise which resolves to the updated result object
             if( _.isString( arg )){
                 return Promise.resolve( result )
-                    .then(() => { return AccountsHub._preferredLabelById( arg, preferred || AccountsHub.opts().preferredLabel(), result ); })
+                    .then(() => { return self._preferredLabelById( arg, preferred || self.opts().preferredLabel(), result ); })
                     .then(( res ) => {
                         //console.debug( 'res', res );
                         return res ? res : result;
@@ -530,7 +535,7 @@ export class ahClass {
             }
             if( _.isString( arg._id )){
                 return Promise.resolve( result )
-                    .then(() => { return AccountsHub._preferredLabelByDoc( arg, preferred || AccountsHub.opts().preferredLabel(), result ); })
+                    .then(() => { return self._preferredLabelByDoc( arg, preferred || self.opts().preferredLabel(), result ); })
                     .then(( res ) => {
                         //console.debug( res );
                         return res;

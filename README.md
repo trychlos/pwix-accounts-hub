@@ -218,6 +218,26 @@ This method returns the `pwix:i18n` namespace of the `pwix:accounts-hub` package
 
 With that name, anyone is so able to provide additional translations.
 
+## Blaze components
+
+### `ahPreferredLabel`
+
+A component which asynchrously displays the user preferred label.
+
+It accepts following data context:
+
+- `ahName`
+
+    The name of the `AccountsHub.ahClass` instance, defaulting to 'users'.
+
+- `ahUserLabel`
+
+    The label to be displayed, defaulting to the preferred label of identifier user (see below).
+
+- `ahUserId`
+
+    The identifier of the user to be considered.
+
 ## Configuration
 
 The package's behavior can be configured through a call to the `AccountsHub.configure()` method, with just a single javascript object argument, which itself should only contains the options you want override.

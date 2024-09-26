@@ -32,7 +32,7 @@ function configure( api ){
     api.use( 'pwix:options@2.1.0' );
     api.use( 'reactive-var' );
     api.use( 'tmeasday:check-npm-versions@1.0.2 || 2.0.0-beta.0', 'server' );
-    api.addFiles( 'src/client/components/AccountPreferredLabel/AccountPreferredLabel.js', 'client' );
+    api.addFiles( 'src/client/components/ahPreferredLabel/ahPreferredLabel.js', 'client' );
 }
 
 // NPM dependencies are checked in /src/server/js/check_npms.js
