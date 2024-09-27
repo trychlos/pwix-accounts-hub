@@ -58,7 +58,6 @@ AccountsHub.s = {
      */
     async byId( instanceName, id, options={} ){
         _trace( 'AccountsHub.s.byId()', arguments );
-        console.debug( 'AccountsHub.s.byId()', arguments );
         assert( instanceName && _.isString( instanceName ), 'expects instanceName be a string, got '+instanceName );
         assert( id && _.isString( id ), 'expects id be a string, got '+id );
         assert( options && _.isObject( options ), 'expects options be an object, got ',+options );
