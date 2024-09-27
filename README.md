@@ -264,6 +264,10 @@ Known configuration options are:
 
     Trace server function calls and their result.
 
+    - `AccountsHub.C.Verbose.INSTANCE`
+
+        Trace `amClass` instanciation
+
     Defaults to `AccountsHub.C.Verbose.CONFIGURE`.
 
 Please note that `AccountsHub.configure()` method should be called in the same terms both in client and server sides.

@@ -372,7 +372,9 @@ export class ahClass {
             return AccountsHub.instances[this.name()];
         }
 
-        console.debug( 'pwix:accounts-hub instanciating ahInstance', this.name());
+        if( AccountsHub.configure().verbosity & AccountsHub.C.Verbose.INSTANCE ){
+            console.log( 'pwix:accounts-hub.ahClass() instanciated for', this.opts().collection());
+        }
 
         // define the Mongo collection
         if( this.opts().collection() === 'users' ){

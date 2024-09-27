@@ -30,7 +30,8 @@ AccountsHub.C = {
         NONE:           0,
         CONFIGURE:      0x01 << 0,
         FUNCTIONS:      0x01 << 1,
-        SERVER:         0x01 << 2
+        SERVER:         0x01 << 2,
+        INSTANCE:       0x01 << 3
     },
 
     // what to do when email cannot be sent
