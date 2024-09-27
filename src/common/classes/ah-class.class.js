@@ -38,6 +38,7 @@ export class ahClass {
      * @summary: check that the proposed candidate email address is valid, and not already exists
      */
     async _checkEmailAddress( email, opts={} ){
+        const self = this;
         let result = {
             ok: true,
             reason: undefined,
@@ -83,17 +84,17 @@ export class ahClass {
         // check if the email address already exists
         const _checkExists = async function(){
             if( opts.testExists !== false ){
-                result.ok = Boolean( await this.byEmailAddress( result.canonical ));
+                if( Boolean( await self.byEmailAddress( result.canonical ))){
+                    result.ok = false;
+                    result.reason = 'email_exists';
+                    result.errors.push( pwixI18n.label( I18N, 'checks.'+result.reason ));
+                    result.countNotOk += 1;
+                } else {
+                    result.countOk += 1;
+                }
             }
         };
-        if( await _checkExists()){
-            result.ok = false;
-            result.reason = 'email_exists';
-            result.errors.push( pwixI18n.label( I18N, 'checks.'+result.reason ));
-            result.countNotOk += 1;
-        } else {
-            result.countOk += 1;
-        }
+        await _checkExists();
         return result;
     }
 
@@ -191,6 +192,7 @@ export class ahClass {
      * @summary: check that the proposed candidate username is valid, and not already exists
      */
     async _checkUsername( username, opts={} ){
+        const self = this;
         let result = {
             ok: true,
             reason: undefined,
@@ -237,18 +239,32 @@ export class ahClass {
         // check if the username already exists
         const _checkExists = async function(){
             if( opts.testExists !== false ){
-                result.ok = Boolean( await this.byUsername( result.canonical ));
+                if( Boolean( await self.byUsername( result.canonical ))){
+                    result.ok = false;
+                    result.reason = 'username_exists';
+                    result.errors.push( pwixI18n.label( I18N, 'checks.'+result.reason ));
+                    result.countNotOk += 1;
+                } else {
+                    result.countOk += 1;
+                }
             }
         };
-        if( await _checkExists()){
-            result.ok = false;
-            result.reason = 'username_exists';
-            result.errors.push( pwixI18n.label( I18N, 'checks.'+result.reason ));
-            result.countNotOk += 1;
-        } else {
-            result.countOk += 1;
-        }
+        await _checkExists();
         return result;
+    }
+
+    // @locus Server
+    // Deny all client-side updates
+    // cf. https://guide.meteor.com/security.html#allow-deny
+    // see also https://docs.meteor.com/api/accounts.html#Meteor-users
+    _deny(){
+        if( Meteor.isServer ){
+            this.collection().deny({
+                insert(){ return true; },
+                update(){ return true; },
+                remove(){ return true; },
+            });
+        }
     }
 
     /*
@@ -260,7 +276,7 @@ export class ahClass {
      * @param {Object} the result object to be updated
      * @returns: {Object}
      */
-    _preferredLabelByDoc = function( user, preferred, result ){
+    _preferredLabelByDoc( user, preferred, result ){
         _trace( 'ahClass._preferredLabelByDoc()', arguments );
         // make reasonably sure we have a user document
         if( user && _.isObject( user ) && user._id && _.isString( user._id )){
@@ -309,7 +325,7 @@ export class ahClass {
      * @locus Anywhere
      * @returns {Object} the initial result
      */
-    _preferredLabelInitialResult = function( arg, preferred ){
+    _preferredLabelInitialResult( arg, preferred ){
         _trace( 'ahClass._preferredLabelInitialResult()', arguments );
         if( arg ){
             // if a user identifier is provided
@@ -366,6 +382,8 @@ export class ahClass {
             //console.debug( 'pwix:accounts-hub defining collection', this.opts().collection());
             this.#collection = new Mongo.Collection( this.opts().collection());
         }
+        // and (on the server) deny all client-side direct updates
+        this._deny();
 
         // register this new instance
         AccountsHub.instances[this.name()] = this;
@@ -395,10 +413,7 @@ export class ahClass {
         _trace( 'ahClass.byId()', arguments );
         assert( id && _.isString( id ), 'expects id be a string, got '+id );
         assert( !options || _.isObject( options ), 'expects options be an object if set, got ',+options );
-        const res = Meteor.isClient ? await Meteor.callAsync( 'AccountsHub.byId', this.name(), id, options ) : await AccountsHub.s.byId( this.name(), id, options );
-        console.debug( 'res', res );
-        return res;
-        //return await( Meteor.isClient ? Meteor.callAsync( 'AccountsHub.byId', this.name(), id, options ) : AccountsHub.s.byId( this.name(), id, options ));
+        return Meteor.isClient ? await Meteor.callAsync( 'AccountsHub.byId', this.name(), id, options ) : await AccountsHub.s.byId( this.name(), id, options );
     }
 
     /**

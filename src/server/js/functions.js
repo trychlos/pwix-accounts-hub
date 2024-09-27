@@ -62,13 +62,13 @@ AccountsHub.s = {
         assert( instanceName && _.isString( instanceName ), 'expects instanceName be a string, got '+instanceName );
         assert( id && _.isString( id ), 'expects id be a string, got '+id );
         assert( options && _.isObject( options ), 'expects options be an object, got ',+options );
-        let result = null;
+        let doc = null;
         const ahInstance = AccountsHub.instances[instanceName];
         if( ahInstance ){
             assert( ahInstance instanceof AccountsHub.ahClass, 'expects an instance of AccountsHub.ahClass, got '+ahInstance );
             const collection = ahInstance.collection();
             assert( collection && collection instanceof Mongo.Collection, 'expects a Mongo.Collection, got '+collection );
-            let doc = await collection.findOneAsync({ _id: id }, options );
+            doc = await collection.findOneAsync({ _id: id }, options );
             if( doc ){
                 doc = AccountsHub.s.cleanupUserDocument( doc );
             }
