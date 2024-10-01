@@ -31,8 +31,7 @@ AccountsHub.configure = function( o ){
         if( notexist.length ){
             console.warn( 'pwix:accounts-hub ignoring (re)configuration due to not existing keys', notexist );
         } else {
-            _conf = AccountsHub._conf.get();
-            _.merge( _conf, AccountsHub._defaults, o );
+            _conf = _.merge( AccountsHub._defaults, _conf, o );
             AccountsHub._conf.set( _conf );
             // be verbose if asked for
             if( _conf.verbosity & AccountsHub.C.Verbose.CONFIGURE ){
@@ -44,5 +43,5 @@ AccountsHub.configure = function( o ){
     return AccountsHub._conf.get();
 }
 
-_.merge( _conf, AccountsHub._defaults );
+_conf = _.merge( {}, AccountsHub._defaults );
 AccountsHub._conf.set( _conf );
