@@ -86,7 +86,7 @@ AccountsHub.update = async function( user, modifier, options ){
         if( Meteor.isClient ){
             res = Meteor.callAsync( 'AccountsHub.update', id, modifier, options );
         } else {
-            res = AccountsHub.server.update( id, modifier, options );
+            res = AccountsHub.s.update( id, modifier, options );
         }
     } else {
         throw new Meteor.Error( 'arg', 'incorrect argument' );

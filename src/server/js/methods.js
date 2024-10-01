@@ -21,7 +21,7 @@ Meteor.methods({
     /*
     // update the named field of the user data
     async 'AccountsHub.update'( id, modifier, options ){
-        return AccountsHub.server.update( id, modifier, options );
+        return AccountsHub.s.update( id, modifier, options );
     }
         */
 });
