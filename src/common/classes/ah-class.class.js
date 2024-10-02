@@ -287,14 +287,21 @@ export class ahClass {
             if( mypref === AccountsHub.C.PreferredLabel.USERNAME && user.username ){
                 result = { label: user.username, origin: AccountsHub.C.PreferredLabel.USERNAME };
 
-            } else if( mypref === AccountsHub.C.PreferredLabel.EMAIL_ADDRESS && user.emails[0].address ){
+            } else if( mypref === AccountsHub.C.PreferredLabel.USERNAME && user.usernames && user.usernames[0].username ){
+                result = { label: user.usernames[0].username, origin: AccountsHub.C.PreferredLabel.USERNAME };
+
+            } else if( mypref === AccountsHub.C.PreferredLabel.EMAIL_ADDRESS && user.emails && user.emails[0].address ){
                 result = { label: user.emails[0].address, origin: AccountsHub.C.PreferredLabel.EMAIL_ADDRESS };
 
             } else if( user.username ){
                 _verbose( AccountsHub.C.Verbose.PREFERREDLABEL, 'pwix:accounts-hub fallback to username while preferred is', mypref );
                 result = { label: user.username, origin: AccountsHub.C.PreferredLabel.USERNAME };
 
-            } else if( user.emails[0].address ){
+            } else if( user.usernames && user.usernames[0].username ){
+                _verbose( AccountsHub.C.Verbose.PREFERREDLABEL, 'pwix:accounts-hub fallback to usernames while preferred is', mypref );
+                result = { label: user.usernames[0].username, origin: AccountsHub.C.PreferredLabel.USERNAME };
+
+            } else if( user.emails && user.emails[0].address ){
                 _verbose( AccountsHub.C.Verbose.PREFERREDLABEL, 'pwix:accounts-hub fallback to email address name while preferred is', mypref );
                 const words = user.emails[0].address.split( '@' );
                 result = { label: words[0], origin: AccountsHub.C.PreferredLabel.EMAIL_ADDRESS };
