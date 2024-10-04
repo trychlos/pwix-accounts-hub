@@ -278,10 +278,12 @@ Remind too that Meteor packages are instanciated at application level. They are 
 
 In accordance with advices from [the Meteor Guide](https://guide.meteor.com/writing-atmosphere-packages.html#peer-npm-dependencies), we do not hardcode NPM dependencies in `package.js`. Instead we check npm versions of installed packages at runtime, on server startup, in development environment.
 
-Dependencies as of v 2.2.0:
+Dependencies as of v 1.0.0:
 
 ```js
-    'lodash': '^4.17.0'
+    'email-validator': '^2.0.4',
+    'lodash': '^4.17.0',
+    'zxcvbn': '^4.4.2'
 ```
 
 Each of these dependencies should be installed at application level:
@@ -306,4 +308,4 @@ In case of support or error, please report your issue request to our [Issues tra
 
 ---
 P. Wieser
-- Last updated on 2024, Sep. 13th
+- Last updated on 2024, Oct. 4th
