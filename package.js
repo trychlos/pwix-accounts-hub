@@ -1,6 +1,6 @@
 Package.describe({
     name: 'pwix:accounts-hub',
-    version: '1.0.0',
+    version: '1.0.1-rc',
     summary: '          ',
     git: 'https://github.com/trychlos/pwix-accounts-hub',
     documentation: 'README.md'
