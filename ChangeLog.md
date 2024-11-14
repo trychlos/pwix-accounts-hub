@@ -6,7 +6,7 @@
 
     Release date: 
 
-    - 
+    - Remove dead code
 
 ### 1.0.0
 

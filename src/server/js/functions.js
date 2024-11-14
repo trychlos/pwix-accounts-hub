@@ -150,27 +150,5 @@ AccountsHub.s = {
             delete user.profile;
         }
         return user;
-    },
-
-    /**
-     * update user document with provided values
-     *  do not update updatedAt/updatedBy values as this is considered as pure user settings
-     * @throws {Error} when user not found
-     */
-    /*
-    async update( id, modifier, options ){
-        check( id, String );
-        check( modifier, Object );
-        if( id && _.isString( id )){
-            return Meteor.users.updateAsync({ _id: id }, modifier, options )
-                .then(( res ) => {
-                    _verbose( AccountsHub.C.Verbose.SERVERDB, 'pwix:accounts-hub writeData('+id+')', res );
-                    return res;
-                });
-        } else {
-            // either a code error or a user try to bypass our checks
-            throw new Meteor.Error( 'arg', 'incorrect argument' );
-        }
     }
-        */
 };

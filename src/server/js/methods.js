@@ -16,12 +16,5 @@ Meteor.methods({
     // find a user by his/her username
     async 'AccountsHub.byUsername'( instanceName, username, options ){
         return AccountsHub.s.byUsername( instanceName, username, options );
-    },
-
-    /*
-    // update the named field of the user data
-    async 'AccountsHub.update'( id, modifier, options ){
-        return AccountsHub.s.update( id, modifier, options );
     }
-        */
 });
