@@ -3,3 +3,7 @@
  */
 
 import '../../common/js/index.js';
+
+import './functions.js';
+
+import '../stylesheets/accounts_hub.less';

@@ -183,6 +183,15 @@ export class ahOptions extends Options.Base {
 
     /**
      * Getter/Setter
+     * @param {Function} fn extension of the 'all' publication
+     * @returns {Function}
+     */
+    serverAllExtend( fn ){
+        return this.base_gsFn( 'serverAllExtend', fn, { default: null });
+    }
+
+    /**
+     * Getter/Setter
      * @param {Integer|Function} value required username length
      * @returns {Integer}
      */

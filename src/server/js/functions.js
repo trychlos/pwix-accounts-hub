@@ -11,6 +11,24 @@ import { Mongo } from 'meteor/mongo';
 import { ahOptions } from '../../common/classes/ah-options.class.js';
 
 AccountsHub.s = {
+
+    /*
+     * @summary Make sure all the fields of the fieldset are set in the item, even if undefined
+     * @param {Object} item
+     * @returns {Object} item
+     */
+    addUndef( instanceName, item ){
+        const ahInstance = AccountsHub.instances[instanceName];
+        if( ahInstance.fieldSet && typeof ahInstance.fieldSet === 'function' ){
+            ahInstance.fieldSet().names().forEach(( it ) => {
+                if( it.indexOf( '.' ) === -1 && !Object.keys( item ).includes( it )){
+                    item[it] = undefined;
+                }
+            });
+        }
+        return item;
+    },
+
     /*
      * @param {String} the searched email address
      * @param {Object} options an optional dictionary of fields to return or exclude

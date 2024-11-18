@@ -571,6 +571,14 @@ export class ahClass {
     }
 
     /**
+     * @summary 'serverAllExtend' function let the application extends the content of the All publication
+     * @returns {Function} the provided function or null
+     */
+    serverAllExtend(){
+        return this.opts().serverAllExtend();
+    }
+
+    /**
      * @locus Anywhere
      * @param {String} username
      * @returns {Object} the default Mongo selector for this username

@@ -2,11 +2,13 @@
 
 ## ChangeLog
 
-### 1.0.1-rc
+### 1.1.0-rc
 
     Release date: 
 
     - Remove dead code
+    - Define new runAccountsSelection() function, thus bumping minor candidate version number
+    - Add less dependency
 
 ### 1.0.0
 
