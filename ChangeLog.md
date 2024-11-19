@@ -2,9 +2,9 @@
 
 ## ChangeLog
 
-### 1.1.0-rc
+### 1.1.0
 
-    Release date: 
+    Release date: 2024-11-19
 
     - Remove dead code
     - Define new runAccountsSelection() function, thus bumping minor candidate version number
@@ -18,4 +18,4 @@
 
 ---
 P. Wieser
-- Last updated on 2024, Oct. 4th
+- Last updated on 2024, Nov. 19th
