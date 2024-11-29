@@ -2,11 +2,11 @@
 
 ## ChangeLog
 
-### 1.1.1-rc
+### 1.2.0-rc
 
     Release date: 
 
-    - 
+    - Now hosts our standard Accounts createUser hooks, thus bumping minor candidate version number
 
 ### 1.1.0
 

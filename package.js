@@ -1,7 +1,7 @@
 Package.describe({
     name: 'pwix:accounts-hub',
-    version: '1.1.1-rc',
-    summary: '          ',
+    version: '1.2.0-rc',
+    summary: 'Accounts management hub for Meteor',
     git: 'https://github.com/trychlos/pwix-accounts-hub',
     documentation: 'README.md'
 });
@@ -26,6 +26,7 @@ function configure( api ){
     api.versionsFrom([ '2.9.0', '3.0.1' ]);
     api.use( 'accounts-base' );
     api.use( 'blaze-html-templates@2.0.0 || 3.0.0-alpha300.0', 'client' );
+    api.use( 'check' );
     api.use( 'ecmascript' );
     api.use( 'less@4.0.0', 'client' );
     api.use( 'mongo' );
@@ -33,6 +34,7 @@ function configure( api ){
     api.use( 'pwix:modal@2.2.0' );
     api.use( 'pwix:options@2.1.0' );
     api.use( 'pwix:ui-utils@1.2.0' );
+    api.use( 'random' );
     api.use( 'reactive-var' );
     api.use( 'tmeasday:check-npm-versions@1.0.2 || 2.0.0-beta.0', 'server' );
     api.addFiles( 'src/client/components/ahPreferredLabel/ahPreferredLabel.js', 'client' );

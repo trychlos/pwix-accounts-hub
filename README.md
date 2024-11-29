@@ -210,6 +210,12 @@ Default is the value configured at instanciation time.
 
 #### Functions
 
+##### `AccountsHub.onCreateUser( f<Function> )`
+
+On server-side, push a new function on the stack of `Accounts.onCreateUser()` calls.
+
+This only applies to `users` Meteor standard collection.
+
 ##### `AccountsHub.runAccountsSelection( selected<ReactiveVar>, opts<Object> )`
 
 Runs a modal dialog to let the user choose zero to many user accounts.
