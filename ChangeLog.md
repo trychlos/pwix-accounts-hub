@@ -7,6 +7,8 @@
     Release date: 
 
     - Now hosts our standard Accounts createUser hooks, thus bumping minor candidate version number
+    - Extend multiple-select dependency to v2.0.0
+
 
 ### 1.1.0
 
