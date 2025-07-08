@@ -2,9 +2,9 @@
 
 ## ChangeLog
 
-### 1.2.0-rc
+### 1.2.0
 
-    Release date: 
+    Release date: 2025- 7- 8
 
     - Now hosts our standard Accounts createUser hooks, thus bumping minor candidate version number
     - Extend multiple-select dependency to v2.0.0
@@ -26,4 +26,4 @@
 
 ---
 P. Wieser
-- Last updated on 2024, Nov. 19th
+- Last updated on 2025, Jul. 8th
