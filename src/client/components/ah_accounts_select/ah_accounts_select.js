@@ -22,7 +22,7 @@ import 'multiple-select';
 import 'multiple-select/dist/multiple-select.min.css';
 
 import { pwixI18n } from 'meteor/pwix:i18n';
-import { UIU } from 'meteor/pwix:ui-utils';
+import { UIUtils } from 'meteor/pwix:ui-utils';
 
 import './ah_accounts_select.html';
 
@@ -82,7 +82,7 @@ Template.ah_accounts_select.onRendered( function(){
     self.autorun(() => {
         const selectable = Template.currentData().selectable;
         if( selectable ){
-            UIU.DOM.waitFor( '.ah-accounts-select select.multiple-select' ).then(() => {
+            UIUtils.DOM.waitFor( '.ah-accounts-select select.multiple-select' ).then(() => {
                 conf.placeholder = dc.select_ph || pwixI18n.label( I18N, 'dialogs.accounts_select_ph' );
                 self.AH.$select.multipleSelect( conf );
             }).then(() => {

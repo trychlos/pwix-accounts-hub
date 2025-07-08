@@ -8,7 +8,7 @@
 
     - Now hosts our standard Accounts createUser hooks, thus bumping minor candidate version number
     - Extend multiple-select dependency to v2.0.0
-
+    - Update to pwix:ui-utils v1.4
 
 ### 1.1.0
 

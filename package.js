@@ -33,7 +33,7 @@ function configure( api ){
     api.use( 'pwix:i18n@1.5.0' );
     api.use( 'pwix:modal@2.2.0' );
     api.use( 'pwix:options@2.1.0' );
-    api.use( 'pwix:ui-utils@1.2.0' );
+    api.use( 'pwix:ui-utils@1.4.0' );
     api.use( 'random' );
     api.use( 'reactive-var' );
     api.use( 'tmeasday:check-npm-versions@1.0.2 || 2.0.0-beta.0', 'server' );
